@@ -4,7 +4,7 @@
 
 set -eu
 
-as_version=""
+as_version="2.10.1-d5bffc76-Debian10"
 registry_image_name="openvpn/openvpn-as"
 
 usage() {
@@ -47,4 +47,4 @@ if [ -z "$as_version" ]; then
     exit 1
 fi
 
-docker buildx build --no-cache --platform linux/amd64,linux/arm64 -f Dockerfile --build-arg="VERSION=$as_version" -t $registry_image_name:$as_version -t $registry_image_name:latest --push .
+docker buildx build --no-cache --platform linux/amd64 -f Dockerfile --build-arg="VERSION=$as_version" -t $registry_image_name:$as_version -t $registry_image_name:latest --push .

@@ -1,7 +1,7 @@
 # Copyright 2024 OpenVPN Inc <sales@openvpn.net>
 # SPDX-License-Identifier: Apache-2.0
 #
-FROM --platform=$TARGETPLATFORM ubuntu:22.04
+FROM --platform=$TARGETPLATFORM debian:10
 
 ARG TARGETPLATFORM
 ARG VERSION
@@ -15,10 +15,10 @@ RUN apt-get update && \
     gnupg \
     net-tools \
     iptables \
-    systemctl
+    systemd
 
-RUN wget https://as-repository.openvpn.net/as-repo-public.asc -qO /etc/apt/keyrings/as-repository.asc && \
-    echo "deb [arch=${TARGETPLATFORM#linux/} signed-by=/etc/apt/keyrings/as-repository.asc] http://as-repository.openvpn.net/as/debian jammy main">/etc/apt/sources.list.d/openvpn-as-repo.list && \
+RUN wget -qO - https://as-repository.openvpn.net/as-repo-public.gpg | apt-key add - && \
+    echo "deb http://as-repository.openvpn.net/as/debian buster main">/etc/apt/sources.list.d/openvpn-as-repo.list && \
     apt update && apt -y install openvpn-as=$VERSION && \
     apt clean
 
@@ -30,5 +30,10 @@ VOLUME /openvpn
 
 COPY docker-entrypoint.sh /
 
+COPY pyovpn-2.0-py3.7.egg /
+
+COPY run.sh /
+
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["/usr/local/openvpn_as/scripts/openvpnas", "--nodaemon"]
+
+CMD ["/bin/bash","-c","./run.sh"]
