@@ -4,7 +4,7 @@
 
 set -eu
 
-as_version="2.10.1-d5bffc76-Debian10"
+as_version="2.13.1-d8cdeb9c-Debian10"
 registry_image_name="openvpn/openvpn-as"
 
 usage() {
